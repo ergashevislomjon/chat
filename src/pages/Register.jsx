@@ -9,7 +9,12 @@ import { useNavigate, Link } from "react-router-dom";
 const Register = () => {
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imgFileName, setImgFileName] = useState("");
   const navigate = useNavigate();
+
+  function fileName(imgData) {
+    setImgFileName(imgData.target.files[0].name);
+  }
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -18,6 +23,11 @@ const Register = () => {
     const email = e.target[1].value;
     const password = e.target[2].value;
     const file = e.target[3].files[0];
+
+    let ring = document.querySelector(".lds-ring");
+    let btnText = document.querySelector(".btn__text");
+    ring.style.display = "inline-block";
+    btnText.style.display = "none";
 
     try {
       //Create user
@@ -55,6 +65,8 @@ const Register = () => {
         });
       });
     } catch (err) {
+      ring.style.display = "none";
+      btnText.style.display = "block";
       setErr(true);
       setLoading(false);
     }
@@ -63,19 +75,34 @@ const Register = () => {
   return (
     <div className="formContainer">
       <div className="formWrapper">
-        <span className="logo">Chat</span>
+        {/* <span className="logo">LOGO</span> */}
         <span className="title">Register</span>
         <form onSubmit={handleSubmit}>
-          <input required type="text" placeholder="Your Fullname" />
-          <input required type="email" placeholder="Your Email" />
+          <input required type="text" placeholder="Fullname" />
+          <input required type="email" placeholder="Email" />
           <input required type="password" placeholder="Password" />
-          <input required style={{ display: "none" }} type="file" id="file" />
+          <input
+            required
+            style={{ display: "none" }}
+            type="file"
+            id="file"
+            onChange={(e) => fileName(e)}
+          />
           <label htmlFor="file">
             <img src={Add} alt="" />
             <span>Add an avatar</span>
+            <span> {imgFileName}</span>
           </label>
-          <button disabled={loading}>Sign up</button>
-          {err && <span>Something went wrong</span>}
+          <button disabled={loading} className="btn_load">
+            <span className="btn__text">Sign up</span>
+            <div className="lds-ring" style={{ display: "none" }}>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </button>
+          {err && <span className="error_text">Something went wrong</span>}
         </form>
         <p>
           You do have an account? <Link to="/login">Login</Link>

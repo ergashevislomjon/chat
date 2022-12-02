@@ -18,10 +18,12 @@ const Messages = () => {
     };
   }, [data.chatId]);
 
-  console.log(messages)
 
   return (
     <div className="messages">
+      {
+        messages.length === 0 ? <div className="select-text"> Select a chat to start messaging </div> : " "
+      }
       {messages.map((m) => (
         <Message message={m} key={m.id} />
       ))}
